@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "838132652631",
+    "project_id": "spotify-music-player-spotify",
+    "storage_bucket": "spotify-music-player-spotify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838132652631:android:b20af99411adec5182a112",
+        "android_client_info": {
+          "package_name": "ir.vbile.app.spotifymusicplayer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838132652631-e1dfdi1chkl2h7vn3n00jidp4r37l9vi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz-iJIrsgRVUY8LloeLNMXmoDyestaybw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838132652631-e1dfdi1chkl2h7vn3n00jidp4r37l9vi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
