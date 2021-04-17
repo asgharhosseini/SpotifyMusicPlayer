@@ -1,10 +1,11 @@
-package ir.vbile.app.spotifymusicplayer.service
+package ir.vbile.app.spotifymusicplayer.service.callbacks
 
 import android.app.Notification
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import ir.vbile.app.spotifymusicplayer.other.Constants.NOTIFICATION_ID
+import ir.vbile.app.spotifymusicplayer.service.MusicService
 
 class MusicPlayerNotificationListener(
     private val musicService: MusicService
