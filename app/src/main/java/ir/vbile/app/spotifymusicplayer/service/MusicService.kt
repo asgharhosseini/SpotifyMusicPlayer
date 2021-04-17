@@ -14,6 +14,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import ir.vbile.app.spotifymusicplayer.other.Constants.MEDIA_ROOT_ID
+import ir.vbile.app.spotifymusicplayer.other.Constants.NETWORK_ERROR
 import ir.vbile.app.spotifymusicplayer.service.callbacks.MusicPlaybackPreparer
 import ir.vbile.app.spotifymusicplayer.service.callbacks.MusicPlayerEventListener
 import ir.vbile.app.spotifymusicplayer.service.callbacks.MusicPlayerNotificationListener
@@ -150,6 +151,7 @@ class MusicService : MediaBrowserServiceCompat() {
                             isPlayerInitialized = true
                         }
                     } else {
+                        mediaSession.sendSessionEvent(NETWORK_ERROR, null)
                         result.sendResult(null)
                     }
                 }
