@@ -1,12 +1,16 @@
 package ir.vbile.app.spotifymusicplayer
 
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ir.vbile.app.spotifymusicplayer.data.model.Song
 import ir.vbile.app.spotifymusicplayer.other.Status.*
+import ir.vbile.app.spotifymusicplayer.service.isPlaying
 import ir.vbile.app.spotifymusicplayer.service.toSong
 import ir.vbile.app.spotifymusicplayer.ui.adapter.SwipeSongAdapter
 import ir.vbile.app.spotifymusicplayer.ui.viewmodel.MainViewModel
@@ -27,12 +31,30 @@ class MainActivity : AppCompatActivity() {
 
     private var curPlayingSong: Song? = null
 
+    private var playbackState: PlaybackStateCompat? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         subscribeToObservers()
         vpSong.adapter = swipeSongAdapter
+        vpSong.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (playbackState?.isPlaying == true) {
+                    mainViewModel.playOrToggleSong(swipeSongAdapter.songs[position])
+                } else {
+                    curPlayingSong = swipeSongAdapter.songs[position]
+                }
+            }
+        })
+
+        ivPlayPause.setOnClickListener {
+            curPlayingSong?.let {
+                mainViewModel.playOrToggleSong(it, true)
+            }
+        }
 
     }
 
@@ -69,6 +91,36 @@ class MainActivity : AppCompatActivity() {
             curPlayingSong = it.toSong()
             glide.load(curPlayingSong?.imageUrl).into(ivCurSongImage)
             switchViewPagerToCurrentSong(curPlayingSong ?: return@observe)
+        }
+        mainViewModel.playbackState.observe(this) {
+            playbackState = it
+            ivPlayPause.setImageResource(
+                if (playbackState?.isPlaying == true) R.drawable.ic_pause else R.drawable.ic_play
+            )
+        }
+        mainViewModel.isConnected.observe(this) {
+            it?.getContentIfNotHandled()?.let { result ->
+                when (result.status) {
+                    ERROR -> Snackbar.make(
+                        rootLayout,
+                        result.message ?: "An unknown error occured",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    else -> Unit
+                }
+            }
+        }
+        mainViewModel.networkError.observe(this) {
+            it?.getContentIfNotHandled()?.let { result ->
+                when (result.status) {
+                    ERROR -> Snackbar.make(
+                        rootLayout,
+                        result.message ?: "An unknown error occured",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    else -> Unit
+                }
+            }
         }
     }
 }
